@@ -3,6 +3,7 @@ class eSession
 {
   function __construct( )
   {
+    session_start();
   }
 
   public static function getInstance( )
