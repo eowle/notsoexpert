@@ -1,9 +1,12 @@
 <?php
 class ScheduleAPI extends NotSoExpertAPI
 {
+  private $data_source;
+
   public function __construct()
   {
     parent::__construct();
+    $this->data_source = new ScheduleDataSource();
   }
 
   /**
@@ -20,19 +23,9 @@ class ScheduleAPI extends NotSoExpertAPI
       return array();
     }
 
-    $proc = "CALL get_schedule_by_week(?)";
-    $this->db->prepare($proc);
-    $this->db->bind('i', array($params['week']));
+    $schedule = $this->data_source->getScheduleForWeek($params['week']);
+    $response = array("week" => $params['week'], "schedule" => $schedule);
 
-    if($this->db->execute())
-    {
-      $this->db->bindResults(array('game_id', 'home_team', 'away_team', 'game_time'));
-      $schedule = array();
-
-      while($this->db->fetch() !== null)
-      {
-        $schedule[] = $this->db->result;
-      }
-    }
+    return $response;
   }
 }

@@ -1,4 +1,5 @@
 <?php
+require_once('../config/Config.db.php');
 class eDB
 {
   private static $dbConfig = array (
@@ -65,8 +66,9 @@ class eDB
   	$resultArray = array();
   	foreach( $varNames as $var )
   	{
-  		$resultArray[] =& $this->result->$var;
+      $resultArray[] = &$this->result->$var;
   	}
+
   	call_user_func_array( array( $this->stmt, 'bind_result' ), $resultArray );
   }
   
@@ -81,5 +83,17 @@ class eDB
   {
   	$this->stmt->close();
   	while( $this->conn->next_result() ) {}	
+  }
+
+  function createObjectFromResult()
+  {
+    $temp = new stdClass();
+
+    foreach($this->result as $k => $v)
+    {
+      $temp->$k = $v;
+    }
+
+    return $temp;
   }
 }

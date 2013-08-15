@@ -1,4 +1,5 @@
 <?php
+header("Content-Type: application/json");
 $include_path = __DIR__ . '/' . PATH_SEPARATOR
                 . __DIR__ . '/Data' . PATH_SEPARATOR
                 . __DIR__ . '/Member' . PATH_SEPARATOR
@@ -48,18 +49,20 @@ $instance = new $api_config['class'];
 switch($_SERVER['REQUEST_METHOD'])
 {
   case 'GET':
-    $instance->doGet($extra_params);
+    $output = $instance->doGet($extra_params);
     break;
   case 'POST':
-    $instance->doPost($extra_params);
+    $output = $instance->doPost($extra_params);
     break;
   case 'DELETE':
-    $instance->doDelete();
+    $output = $instance->doDelete();
     break;
   case 'PUT':
-    $instance->doPut();
+    $output = $instance->doPut();
     break;
   default:
     http_response_code(501);
     break;
 }
+
+echo json_encode($output);
