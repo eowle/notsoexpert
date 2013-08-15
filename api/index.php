@@ -17,23 +17,49 @@ $yaml = fread($fh, filesize($config_file));
 $parsed = yaml_parse($yaml);
 $routes = $parsed['Routes'];
 
-
-$api = (isset($_GET['api'])) ? $_GET['api'] : false;
+$category = (isset($_GET['category'])) ? $_GET['category'] : false;
 $id = (isset($_GET['id'])) ? $_GET['id'] : false;
-$sub = (isset($_GET['sub'])) ? $_GET['sub'] : false;
+$api = (isset($_GET['api'])) ? $_GET['api'] : false;
 
-if($api)
+unset($_GET['category'], $_GET['id'], $_GET['api']);
+
+if($category)
 {
-  if($sub)
+  if($api)
   {
-
+    $api_config = $routes[$category][$api];
   }
   else
   {
-    if(isset($routes[$api]['class']))
+    if(isset($routes[$category]))
     {
-      $instance = new $routes[$api]['class'];
-      $instance->doGet(array('week' => 1));
+      $api_config = $routes[$category];
     }
   }
+}
+
+if(isset($api_config['id_field']) && $id)
+{
+  $extra_params = array_merge(array($api_config['id_field'] => $id), $_GET, $_POST);
+}
+
+$instance = new $api_config['class'];
+
+switch($_SERVER['REQUEST_METHOD'])
+{
+  case 'GET':
+    $instance->doGet($extra_params);
+    break;
+  case 'POST':
+    $instance->doPost($extra_params);
+    break;
+  case 'DELETE':
+    $instance->doDelete();
+    break;
+  case 'PUT':
+    $instance->doPut();
+    break;
+  default:
+    http_response_code(501);
+    break;
 }

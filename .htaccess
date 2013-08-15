@@ -1,4 +1,4 @@
 RewriteEngine on
-RewriteRule ^api/([a-zA-Z]+)$ api/index.php?api=$1&%{QUERY_STRING}
-RewriteRule ^api/([a-zA-Z]+)\/([a-zA-Z0-9]+)$ api/index.php?api=$1&id=$2&%{QUERY_STRING}
-RewriteRule ^api/([a-zA-Z]+)\/([a-zA-Z0-9]+)\/([a-zA-Z0-9]+)$ api/index.php?api=$1&id=$2&sub=$3&%{QUERY_STRING}
+RewriteRule ^api/([a-zA-Z]+)$ api/index.php?api=category&%{QUERY_STRING}
+RewriteRule ^api/([a-zA-Z]+)\/([a-zA-Z0-9]+)$ api/index.php?category=$1&id=$2&%{QUERY_STRING}
+RewriteRule ^api/([a-zA-Z]+)\/([a-zA-Z0-9]+)\/([a-zA-Z0-9]+)$ api/index.php?category=$1&id=$2&api=$3&%{QUERY_STRING}

@@ -1,3 +1,23 @@
 Routes:
   schedule:
     class: ScheduleAPI
+    id_field: week
+  picks:
+    class: PicksAPI
+    id_field: week
+  member:
+    picks:
+      class: MemberPicksAPI
+      id_field: member_id
+    profile:
+      class: ProfileAPI
+      id_field: member_id
+  gameday:
+    class: GameDayAPI
+    id_field: week
+  results:
+    class: ResultsAPI
+    id_field: week
+  trashtalk:
+    class: TrashTalkAPI
+    id_field: week
