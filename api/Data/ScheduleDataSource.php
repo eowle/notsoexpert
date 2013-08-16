@@ -1,6 +1,17 @@
 <?php
+/**
+ * Class ScheduleDataSource
+ *
+ * Data source layer for the Schedule API
+ */
 class ScheduleDataSource extends DataSource
 {
+  /**
+   * Get the schedule for the given $week
+   *
+   * @param int $week
+   * @return array [[game_id: int, home_team: string, away_team: string, game_time: string], ...]
+   */
   public function getScheduleForWeek($week)
   {
     $proc = "CALL get_schedule_by_week(?)";

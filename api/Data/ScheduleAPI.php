@@ -1,11 +1,24 @@
 <?php
+/**
+ * Class ScheduleAPI
+ *
+ * API for retrieving the schedule for a given week.  Only implements the GET method.
+ */
 class ScheduleAPI extends NotSoExpertAPI
 {
+  /**
+   * Schedule data provider
+   *
+   * @var ScheduleDataSource
+   */
   private $data_source;
 
+  /**
+   * Build our data provider
+   *
+   */
   public function __construct()
   {
-    parent::__construct();
     $this->data_source = new ScheduleDataSource();
   }
 

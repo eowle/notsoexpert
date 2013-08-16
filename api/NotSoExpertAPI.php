@@ -1,12 +1,19 @@
 <?php
+/**
+ * Class NotSoExpertAPI
+ *
+ * Base definition that all APIs should extend.
+ */
 class NotSoExpertAPI implements iNotSoExpertAPI
 {
-  protected $session, $db;
+  protected $session;
 
+  /**
+   * Fire up our session as soon as an API invoked
+   */
   public function __construct()
   {
     $this->session = eSession::getInstance();
-    $this->db = eDB::getInstance();
   }
 
   /**
