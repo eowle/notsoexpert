@@ -1,9 +1,5 @@
 <?php
 /**
- * index.php serves as the Router and output path for our API
- */
-
-/**
  * Every application defined as an API should return a json-encodable object
  * So we set the Content-Type to application/json
  */
@@ -32,54 +28,11 @@ function __autoload($class_name)
   require_once($class_name . '.php');
 }
 
-/**
- * This is the router section of index.  Load the config from Routes.yaml and parse it, this should give us easy
- * access to an array that will tell us which class handles which request, and what parameters it expects.
- */
-$config_file = "config/Routes.yaml";
-$fh = fopen($config_file, "r");
-$yaml = fread($fh, filesize($config_file));
-$parsed = yaml_parse($yaml);
-$routes = $parsed['Routes'];
+$router = eRouter::getInstance();
+$route_data = $router->getRoute();
 
-/**
- * When a request gets loaded, the exposed URL looks something like:
- *  http://www.example.com/api/schedule/3
- * Our .htaccess re-writes this as:
- *  http://www.example.com/api/index.php?category=schedule&id=3
- *
- * There are rules like the above to handle every expected API call, but they are always in the format:
- *  api/<category>/<id>/<api>
- */
-$category = (isset($_GET['category'])) ? $_GET['category'] : false;
 $id = (isset($_GET['id'])) ? $_GET['id'] : false;
-$api = (isset($_GET['api'])) ? $_GET['api'] : false;
-
-/**
- * We remove these values from our $_GET array so that we can easily append the rest of it as extra parameters to pass on
- * to the API
- */
-unset($_GET['category'], $_GET['id'], $_GET['api']);
-
-
-/**
- * Here, we check the category/api to see if we have a route for them. Once we've found the API we're looking for, load
- * up its config into $api_config
- */
-if($category)
-{
-  if($api)
-  {
-    $api_config = $routes[$category][$api];
-  }
-  else
-  {
-    if(isset($routes[$category]))
-    {
-      $api_config = $routes[$category];
-    }
-  }
-}
+unset($_GET['id']);
 
 /**
  * If an id_field is set in the API config, that means it REQUIRES this field to be passed in.  Outside of that,
@@ -87,9 +40,9 @@ if($category)
  */
 $extra_params = array();
 
-if(isset($api_config['id_field']) && $id)
+if(isset($route_data['id_field']) && $id)
 {
-  $extra_params[$api_config['id_field']] = $id;
+  $extra_params[$route_data['id_field']] = $id;
 }
 
 $extra_params = array_merge($extra_params, $_GET, $_POST);
@@ -100,7 +53,7 @@ $extra_params = array_merge($extra_params, $_GET, $_POST);
  *
  * TODO: Add handling for an invalid class name specified
  */
-$instance = new $api_config['class'];
+$instance = new $route_data['class'];
 
 /**
  * This switch translates our request method (GET|POST|DELETE|PUT) into the respective method in our class.
