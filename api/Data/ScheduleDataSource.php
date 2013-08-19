@@ -28,6 +28,8 @@ class ScheduleDataSource extends DataSource
         $result = $this->db->createObjectFromResult();
         array_push($schedule, $result);
       }
+
+      $this->db->close();
     }
 
     return $schedule;
