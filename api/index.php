@@ -12,6 +12,7 @@ header("Content-Type: application/json");
 $include_path = __DIR__ . '/' . PATH_SEPARATOR
                 . __DIR__ . '/Data' . PATH_SEPARATOR
                 . __DIR__ . '/Member' . PATH_SEPARATOR
+                . __DIR__ . '/Tools' . PATH_SEPARATOR
                 . realpath('../Core');
 
 set_include_path(get_include_path() . PATH_SEPARATOR . $include_path);
