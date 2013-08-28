@@ -18,6 +18,7 @@ class PicksAPI extends NotSoExpertAPI
    */
   public function __construct()
   {
+    parent::__construct();
     $this->data_source = new PicksDataSource();
   }
 

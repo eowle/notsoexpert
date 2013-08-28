@@ -46,7 +46,7 @@ if(isset($route_data['id_field']) && $id)
   $extra_params[$route_data['id_field']] = $id;
 }
 
-$extra_params = array_merge($extra_params, $_GET, $_POST);
+$extra_params = array_merge($extra_params, $_GET, $_POST, $_FILES);
 
 /**
  * The 'class' field of the Routes config specifies which class this request should invoke.  Once we have that,
@@ -60,23 +60,30 @@ $instance = new $route_data['class'];
  * This switch translates our request method (GET|POST|DELETE|PUT) into the respective method in our class.
  * If the user requests something outside of these actions, throw a 501/Method Not Implemented
  */
-switch($_SERVER['REQUEST_METHOD'])
+try
 {
-  case 'GET':
-    $output = $instance->doGet($extra_params);
-    break;
-  case 'POST':
-    $output = $instance->doPost($extra_params);
-    break;
-  case 'DELETE':
-    $output = $instance->doDelete();
-    break;
-  case 'PUT':
-    $output = $instance->doPut();
-    break;
-  default:
-    http_response_code(501);
-    break;
+  switch($_SERVER['REQUEST_METHOD'])
+  {
+    case 'GET':
+      $output = $instance->doGet($extra_params);
+      break;
+    case 'POST':
+      $output = $instance->doPost($extra_params);
+      break;
+    case 'DELETE':
+      $output = $instance->doDelete();
+      break;
+    case 'PUT':
+      $output = $instance->doPut();
+      break;
+    default:
+      http_response_code(501);
+      break;
+  }
+}
+catch(Exception $e)
+{
+  $output = array('error' => $e->getMessage());
 }
 
 /**

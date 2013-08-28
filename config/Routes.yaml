@@ -6,12 +6,9 @@ Routes:
     class: PicksAPI
     id_field: week
   member:
-    picks:
-      class: MemberPicksAPI
-      id_field: member_id
     profile:
       class: ProfileAPI
-      id_field: member_id
+      id_field: user_id
   gameday:
     class: GameDayAPI
     id_field: week

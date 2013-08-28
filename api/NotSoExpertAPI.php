@@ -23,7 +23,7 @@ class NotSoExpertAPI implements iNotSoExpertAPI
    */
   public function doPost($params = null)
   {
-    http_response_code(501);
+    header("HTTP/1.0 501 Method Not Implemented");
     return;
   }
 
@@ -34,7 +34,7 @@ class NotSoExpertAPI implements iNotSoExpertAPI
    */
   public function doGet($params = null)
   {
-    http_response_code(501);
+    header("HTTP/1.0 501 Method Not Implemented");
     return;
   }
 
@@ -52,8 +52,8 @@ class NotSoExpertAPI implements iNotSoExpertAPI
       return true;
     }
 
-    http_response_code(401);
-    throw new Exception('Requested user_id does not match logged in member');
+    header("HTTP/1.0 401 Not Authorized");
+    throw new Exception('Requested user id does not match logged in member');
   }
 
   /**
@@ -62,7 +62,7 @@ class NotSoExpertAPI implements iNotSoExpertAPI
    */
   final public function doDelete()
   {
-    http_response_code(501);
+    header("HTTP/1.0 501 Method Not Implemented");
     return;
   }
 
@@ -72,7 +72,7 @@ class NotSoExpertAPI implements iNotSoExpertAPI
    */
   final public function doPut()
   {
-    http_response_code(501);
+    header("HTTP/1.0 501 Method Not Implemented");
     return;
   }
 }
