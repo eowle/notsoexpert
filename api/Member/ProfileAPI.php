@@ -67,16 +67,23 @@ class ProfileAPI extends NotSoExpertAPI
 
     if($user_id > 0 && $this->validateMember($user_id))
     {
+      $results = array();
       $email = $params['email'];
       $first_name = $params['first_name'];
-      $this->data_source->updateUserNameAndEmail($user_id, $email, $first_name);
+      $results['name_email'] = $this->data_source->updateUserNameAndEmail($user_id, $email, $first_name);
 
       if(isset($params['user_image']))
       {
-        $this->data_source->updateUserImage($user_id, $params['user_image']);
+        $results['image'] = $this->data_source->updateUserImage($user_id, $params['user_image']);
       }
 
-      //TODO: Add password update here
+      if(isset($params['old_password'], $params['new_password'], $params['new_password_repeat'])
+        && $params['new_password'] === $params['new_password_repeat'])
+      {
+        $results['password'] = $this->data_source->updateUserPassword($user_id, $params['old_password'], $params['new_password']);
+      }
+
+      return $results;
     }
 
     return array('error' => 'Invalid member supplied');
@@ -92,7 +99,7 @@ class ProfileAPI extends NotSoExpertAPI
   {
     $validated_fields = array('valid_fields' => array(), 'invalid_fields' => array());
 
-    foreach($fields as $index => $field)
+    foreach($fields as $field)
     {
       if(!in_array($field, self::$valid_fields))
       {

@@ -109,5 +109,35 @@ class ProfileDataSource extends DataSource
     return $result;
   }
 
-  //TODO: Add password update in data source here
+  /**
+   * Update a user's password
+   *
+   * @param int $user_id
+   * @param string $old_password
+   * @param string $new_password
+   * @return bool
+   */
+  public function updateUserPassword($user_id, $old_password, $new_password)
+  {
+    $result = false;
+    $proc = "CALL get_user_password(?)";
+    $this->db->prepare($proc);
+    $this->db->bind('i', array($user_id));
+    if($this->db->execute())
+    {
+      $this->db->bindResults(array('pass_hash'));
+      $this->db->fetch();
+      $data = $this->db->createObjectFromResult();
+      $this->db->close();
+      if(hash('sha512', $old_password . __SALT, false) === $data->pass_hash && strlen($new_password) > 4)
+      {
+        $new_pass_hash = hash('sha512', $new_password . __SALT, false);
+        $proc = "CALL update_pass_hash(?,?)";
+        $this->db->prepare($proc);
+        $this->db->bind('is', array($user_id, $new_pass_hash));
+        $result = $this->db->execute();
+      }
+    }
+    return $result;
+  }
 }
