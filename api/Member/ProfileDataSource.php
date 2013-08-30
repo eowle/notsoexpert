@@ -32,6 +32,7 @@ class ProfileDataSource extends DataSource
     $proc = "CALL get_user_info(?)";
     $this->db->prepare($proc);
     $this->db->bind('i', array($user_id));
+
     if($this->db->execute())
     {
       $this->db->bindResults(array('password', 'email', 'image', 'first_name'));
@@ -54,6 +55,8 @@ class ProfileDataSource extends DataSource
 
       return $trimmed_data;
     }
+
+    return array('success' => false, 'error' => 'Unable to fetch data for user');
   }
 
   /**
@@ -129,9 +132,9 @@ class ProfileDataSource extends DataSource
       $this->db->fetch();
       $data = $this->db->createObjectFromResult();
       $this->db->close();
-      if(hash('sha512', $old_password . __SALT, false) === $data->pass_hash && strlen($new_password) > 4)
+      if(HashHelper::hash($old_password) === $data->pass_hash && strlen($new_password) > 4)
       {
-        $new_pass_hash = hash('sha512', $new_password . __SALT, false);
+        $new_pass_hash = HashHelper::hash($new_password);
         $proc = "CALL update_pass_hash(?,?)";
         $this->db->prepare($proc);
         $this->db->bind('is', array($user_id, $new_pass_hash));
