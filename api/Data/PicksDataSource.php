@@ -14,18 +14,25 @@ class PicksDataSource extends DataSource
    */
   public function getPicksByWeek($week)
   {
-    $proc = "CALL get_picks_by_week(?)";
+    $proc = "CALL get_picks_by_week_with_game_time(?)";
     $this->db->prepare($proc);
     $this->db->bind('i', array($week));
 
     if($this->db->execute())
     {
-      $this->db->bindResults(array('game_id', 'user_id', 'pick'));
+      $this->db->bindResults(array('game_time', 'game_id', 'user_id', 'pick'));
       $picks = array();
 
       while($this->db->fetch())
       {
-        array_push($picks, $this->db->createObjectFromResult());
+        $result = $this->db->createObjectFromResult();
+
+        if(strtotime($result->game_time) > time() && LoginHelper::isLoggedInUser($result->user_id) === false)
+        {
+          $result->pick = true;
+        }
+
+        array_push($picks, $result);
       }
 
       $this->db->close();
@@ -44,18 +51,25 @@ class PicksDataSource extends DataSource
    */
   public function getPicksByWeekAndUserId($week, $user_id)
   {
-    $proc = "CALL get_picks_by_week_and_user(?,?)";
+    $proc = "CALL get_picks_by_week_and_user_with_game_time(?,?)";
     $this->db->prepare($proc);
     $this->db->bind('ii', array($week, $user_id));
 
     if($this->db->execute())
     {
-      $this->db->bindResults(array('game_id', 'user_id', 'pick'));
+      $this->db->bindResults(array('game_time', 'game_id', 'user_id', 'pick'));
       $picks = array();
 
       while($this->db->fetch())
       {
-        array_push($picks, $this->db->createObjectFromResult());
+        $result = $this->db->createObjectFromResult();
+        if(strtotime($result->game_time) > time() && LoginHelper::isLoggedInUser($user_id) === false)
+        {
+
+          $result->pick = true;
+        }
+
+        array_push($picks, $result);
       }
 
       $this->db->close();
