@@ -33,7 +33,7 @@ class PicksAPI extends NotSoExpertAPI
       return array();
     }
 
-    if($params['user_id'] === 'all')
+    if(!isset($params['user_id']))
     {
       $picks = $this->data_source->getPicksByWeek($params['week']);
     }
