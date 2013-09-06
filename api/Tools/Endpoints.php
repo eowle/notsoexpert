@@ -9,7 +9,7 @@ class Endpoints
   /**
    * Constants for easy access
    */
-  const BASE_URL = 'http://www.notsoexpert.com/api/';
+  const BASE_URL = 'http://localhost/notsoexpert/api/';
   const ALL_PICKS = 'all_picks';
   const PICKS_FOR_USER = 'picks_for_user';
   const SCHEDULE = 'schedule';
