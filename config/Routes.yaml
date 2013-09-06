@@ -5,6 +5,8 @@ Routes:
   picks:
     class: PicksAPI
     id_field: week
+  login:
+    class: LoginAPI
   member:
     profile:
       class: ProfileAPI
