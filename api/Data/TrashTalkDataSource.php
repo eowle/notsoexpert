@@ -31,6 +31,7 @@ class TrashTalkDataSource extends DataSource
       while($this->db->fetch())
       {
         $trash = $this->db->createObjectFromResult();
+        $trash->is_owner = LoginHelper::isLoggedInUser($trash->user_id);
         array_push($trash_talk, $trash);
       }
 

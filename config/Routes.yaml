@@ -20,3 +20,5 @@ Routes:
   trashtalk:
     class: TrashTalkAPI
     id_field: week
+  members:
+    class: MembersAPI

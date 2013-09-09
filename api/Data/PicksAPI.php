@@ -42,7 +42,7 @@ class PicksAPI extends NotSoExpertAPI
       $picks = $this->data_source->getPicksByWeekAndUserId($params['week'], $params['user_id']);
     }
 
-    return $picks;
+    return array('week' => $params['week'], 'picks' => $picks);
   }
 
   /**
