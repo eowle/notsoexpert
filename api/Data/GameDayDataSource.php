@@ -23,18 +23,27 @@ class GameDayDataSource extends DataSource
    */
   public function getDataForWeek($week)
   {
-    $data = array();
     $return = array();
 
-    $data['results'] = $this->getResultsForWeek($week);
-    $data['members'] = $this->getMembers();
-    $data['picks'] = $this->getPicksForWeek($week);
-    $data['trash_talk'] = $this->getTrashTalkForWeek($week);
-    $data['schedule'] = $this->getScheduleForWeek($week);
+    $request_start = microtime(true);
+    $results = $this->getResultsForWeek($week);
+    $members = $this->getMembers();
+    $picks = $this->getPicksForWeek($week);
+    $trash_talk = $this->getTrashTalkForWeek($week);
+    $schedule = $this->getScheduleForWeek($week);
+    $standings = $this->getStandings();
+    $request_end = microtime(true);
 
-    $return['members'] = $this->mergeMemberPicksData($data['members'], $data['picks']->picks, $data['results']->results);
-    $return['schedule'] = $data['schedule'];
-    $return['trash_talk'] = $data['trash_talk'];
+    $assembly_start = microtime(true);
+    $return['week'] = $week;
+    $return['members'] = $this->mergeMemberPicksData($members, $picks->picks, $results->results);
+    $return['schedule'] = $schedule->schedule;
+    $return['trash_talk'] = $trash_talk->trash_talk;
+    $return['standings'] = $standings;
+    $assembly_end = microtime(true);
+
+    $return['request_time'] = ($request_end - $request_start) * 1000;
+    $return['assembly_time'] = ($assembly_end - $assembly_start) * 1000;
     return $return;
   }
 
@@ -101,6 +110,18 @@ class GameDayDataSource extends DataSource
     }
 
     return $keyed;
+  }
+
+  /**
+   * Get the league standings
+   *
+   * @return array
+   */
+  public function getStandings()
+  {
+    $this->curl_helper->setUrl(Endpoints::getEndpoint(Endpoints::STANDINGS));
+    $standings = $this->curl_helper->get();
+    return $standings;
   }
 
   /**

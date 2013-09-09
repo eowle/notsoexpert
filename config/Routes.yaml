@@ -22,3 +22,5 @@ Routes:
     id_field: week
   members:
     class: MembersAPI
+  standings:
+    class: StandingsAPI

@@ -16,6 +16,7 @@ class Endpoints
   const TRASH_TALK = 'trash_talk';
   const RESULTS = 'results';
   const MEMBERS = 'members';
+  const STANDINGS = 'standings';
 
   /**
    * Array of said constants => endpoint URIs
@@ -28,7 +29,8 @@ class Endpoints
     self::SCHEDULE => 'schedule/%d',
     self::TRASH_TALK => 'trashtalk/%d',
     self::RESULTS => 'results/%d',
-    self::MEMBERS => 'members'
+    self::MEMBERS => 'members',
+    self::STANDINGS => 'standings'
   );
 
   /**
