@@ -36,12 +36,16 @@ class Endpoints
   /**
    * Get the sprintf-formatted URL for an enpoint
    *
-   * @param string $endpoint - should be accessed by one of the above constants Endpoints::ALL_PICKS
-   * @param string $base_url - can be overridden for testing purposes, but defaults to the above constant
    * @return string - sprintf formatted URL
    */
-  public static function getEndpoint($endpoint, $base_url = self::BASE_URL)
+  public static function getEndpoint()
   {
-    return $base_url . self::$endpoint_urls[$endpoint];
+    $params = func_get_args();
+    $endpoint = self::$endpoint_urls[array_shift($params)];
+    if(count($params) > 0)
+    {
+      $endpoint = vsprintf($endpoint, $params);
+    }
+    return self::BASE_URL . $endpoint;
   }
 }

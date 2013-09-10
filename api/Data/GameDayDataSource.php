@@ -24,27 +24,52 @@ class GameDayDataSource extends DataSource
   public function getDataForWeek($week)
   {
     $return = array();
-
     $request_start = microtime(true);
-    $results = $this->getResultsForWeek($week);
-    $members = $this->getMembers();
-    $picks = $this->getPicksForWeek($week);
-    $trash_talk = $this->getTrashTalkForWeek($week);
-    $schedule = $this->getScheduleForWeek($week);
-    $standings = $this->getStandings();
+
+    /* Linear cURL Implementation
+    $data = array();
+    $data['results'] = $this->getResultsForWeek($week);
+    $data['members'] = $this->getMembers();
+    $data['picks'] = $this->getPicksForWeek($week);
+    $data['trash_talk'] = $this->getTrashTalkForWeek($week);
+    $data['schedule'] = $this->getScheduleForWeek($week);
+    $data['standings'] = $this->getStandings();
+    */
+
+    // Multi-exec curl implementation
+    $data = $this->getDataFromCurlByWeek($week);
+
     $request_end = microtime(true);
 
     $assembly_start = microtime(true);
     $return['week'] = $week;
-    $return['members'] = $this->mergeMemberPicksData($members, $picks->picks, $results->results);
-    $return['schedule'] = $schedule->schedule;
-    $return['trash_talk'] = $trash_talk->trash_talk;
-    $return['standings'] = $standings;
+    $return['members'] = $this->mergeMemberPicksData($data['members'], $data['picks']->picks, $data['results']->results);
+    $return['schedule'] = $data['schedule']->schedule;
+    $return['trash_talk'] = $data['trash_talk']->trash_talk;
+    $return['standings'] = $data['standings'];
     $assembly_end = microtime(true);
 
     $return['request_time'] = ($request_end - $request_start) * 1000;
     $return['assembly_time'] = ($assembly_end - $assembly_start) * 1000;
     return $return;
+  }
+
+  /**
+   * Set up and execute the curl handlers for the data needed
+   *
+   * @param int $week
+   * @return array
+   */
+  protected function getDataFromCurlByWeek($week)
+  {
+    $this->curl_helper->addHandler('results', Endpoints::getEndpoint(Endpoints::RESULTS, $week));
+    $this->curl_helper->addHandler('members', Endpoints::getEndpoint(Endpoints::MEMBERS));
+    $this->curl_helper->addHandler('picks', Endpoints::getEndpoint(Endpoints::ALL_PICKS, $week));
+    $this->curl_helper->addHandler('trash_talk', Endpoints::getEndpoint(Endpoints::TRASH_TALK, $week));
+    $this->curl_helper->addHandler('schedule', Endpoints::getEndpoint(Endpoints::SCHEDULE, $week));
+    $this->curl_helper->addHandler('standings', Endpoints::getEndpoint(Endpoints::STANDINGS));
+    $result = $this->curl_helper->multiGet();
+    return $result;
   }
 
   /**
@@ -132,7 +157,7 @@ class GameDayDataSource extends DataSource
    */
   public function getResultsForWeek($week)
   {
-    $this->curl_helper->setUrl(Endpoints::getEndpoint(Endpoints::RESULTS), $week);
+    $this->curl_helper->setUrl(Endpoints::getEndpoint(Endpoints::RESULTS, $week));
     $results = $this->curl_helper->get();
     return $results;
   }
@@ -157,7 +182,7 @@ class GameDayDataSource extends DataSource
    */
   public function getPicksForWeek($week)
   {
-    $this->curl_helper->setUrl(Endpoints::getEndpoint(Endpoints::ALL_PICKS), $week);
+    $this->curl_helper->setUrl(Endpoints::getEndpoint(Endpoints::ALL_PICKS, $week));
     $picks = $this->curl_helper->get();
     return $picks;
   }
@@ -170,7 +195,7 @@ class GameDayDataSource extends DataSource
    */
   public function getTrashTalkForWeek($week)
   {
-    $this->curl_helper->setUrl(Endpoints::getEndpoint(Endpoints::TRASH_TALK), $week);
+    $this->curl_helper->setUrl(Endpoints::getEndpoint(Endpoints::TRASH_TALK, $week));
     $trash = $this->curl_helper->get();
     return $trash;
   }
@@ -183,7 +208,7 @@ class GameDayDataSource extends DataSource
    */
   public function getScheduleForWeek($week)
   {
-    $this->curl_helper->setUrl(Endpoints::getEndpoint(Endpoints::SCHEDULE), $week);
+    $this->curl_helper->setUrl(Endpoints::getEndpoint(Endpoints::SCHEDULE, $week));
     $schedule = $this->curl_helper->get();
     return $schedule;
   }
