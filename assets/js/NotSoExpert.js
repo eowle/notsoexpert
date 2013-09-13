@@ -13,7 +13,7 @@ define(['backbone',
      * Instance of MeModel
      */
     me: null,
-
+    week: 1,
     /**
      * Set up our router, MeModel, and kick off to the requested page
      *
@@ -22,7 +22,6 @@ define(['backbone',
     initialize: function() {
       this.me = new MeModel();
       this.me.on('sync', this.startRouting, this);
-      this.me.on('sync', this.buildNav, this);
       this.me.fetch();
     },
 
@@ -32,18 +31,25 @@ define(['backbone',
      * @return void
      */
     startRouting: function() {
+      var _this = this;
       this.router = new Router();
-      this.router.on('route:gameday', this.displayGameday);
+
+      this.router.on('route:gameday', function(week) {
+        _this.setWeekOrDefault(week);
+        _this.displayGameday();
+      });
+
       Backbone.history.start({pushState: true});
     },
 
     /**
      * Build out our nav bar
      *
+     * @param week
      * @return void
      */
-    buildNav: function() {
-      new NavbarView({'logged_in': this.me.isLoggedIn(), 'el': $('.nfl-nav-bar')});
+    buildNav: function(week) {
+      new NavbarView({'logged_in': this.me.isLoggedIn(), 'el': $('.nfl-nav-bar'), 'week': week});
     },
 
     /**
@@ -52,8 +58,27 @@ define(['backbone',
      * @param week
      * @returns void
      */
-    displayGameday: function(week) {
+    displayGameday: function() {
+      this.buildNav(this.week);
+    },
 
+    /**
+     * Set the week to given week, or go to the server and get the default week
+     *
+     * @param week
+     * @param callback
+     * @return void
+     */
+    setWeekOrDefault: function(week) {
+      if(!week)
+      {
+        var now = new Date().getTime(),
+            start_time = new Date(2013, 8, 3, 11, 0, 0, 0).getTime(),
+            time_diff = (now - start_time) / 1000;
+        week = Math.ceil(time_diff/(7*86400));
+      }
+
+      this.week = week;
     }
   };
 });

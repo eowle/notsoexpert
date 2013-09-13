@@ -15,8 +15,8 @@ define(['backbone'], function(Backbone){
       '': 'gameday',
       'gameday': 'gameday',
       'gameday/:week': 'gameday',
-      'make-picks': 'makepicks',
-      'make-picks/:week': 'makepicks'
+      'makepicks': 'makepicks',
+      'makepicks/:week': 'makepicks'
     }
   });
 });

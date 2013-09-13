@@ -24,6 +24,7 @@ class LoginDataSource extends DataSource
     if($this->db->execute())
     {
       $this->db->bindResults(array('user_id', 'first_name'));
+      $this->db->fetch();
       $result = $this->db->createObjectFromResult();
       $user_id = (int)$result->user_id;
     }
