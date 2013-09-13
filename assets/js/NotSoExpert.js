@@ -2,7 +2,12 @@
  * This is the driving functionality behind the app.  This sets up the router, and starts configuring/rendering
  * the views for the requested route
  */
-define(['backbone', 'bootstrap', 'js/Router', 'js/models/MeModel'], function(Backbone, bootstrap, Router, MeModel) {
+define(['backbone',
+        'bootstrap',
+        'js/Router',
+        'js/models/MeModel',
+        'js/views/NavbarView'],
+        function(Backbone, bootstrap, Router, MeModel, NavbarView) {
   return {
     /**
      * Instance of MeModel
@@ -14,12 +19,12 @@ define(['backbone', 'bootstrap', 'js/Router', 'js/models/MeModel'], function(Bac
      *
      * @returns void
      */
-    initialize: _.once(function() {
+    initialize: function() {
       this.me = new MeModel();
-      this.me.on('sync', this.startRouting);
-      this.me.on('sync', this.buildNav);
+      this.me.on('sync', this.startRouting, this);
+      this.me.on('sync', this.buildNav, this);
       this.me.fetch();
-    }),
+    },
 
     /**
      * Create our routes and begin creating the page
@@ -38,7 +43,7 @@ define(['backbone', 'bootstrap', 'js/Router', 'js/models/MeModel'], function(Bac
      * @return void
      */
     buildNav: function() {
-
+      new NavbarView({'logged_in': this.me.isLoggedIn(), 'el': $('.nfl-nav-bar')});
     },
 
     /**

@@ -14,7 +14,9 @@ define(['backbone'], function(Backbone){
     routes: {
       '': 'gameday',
       'gameday': 'gameday',
-      'gameday/:week': 'gameday'
+      'gameday/:week': 'gameday',
+      'make-picks': 'makepicks',
+      'make-picks/:week': 'makepicks'
     }
   });
 });
