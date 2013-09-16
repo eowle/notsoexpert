@@ -60,6 +60,11 @@ define(['backbone',
      */
     displayGameday: function() {
       this.buildNav(this.week);
+      var $el = $('.content'),
+          _this = this;
+      require(['js/views/GameDayView'], function(GameDayView){
+        new GameDayView({'week': _this.week, 'el': $el});
+      });
     },
 
     /**
