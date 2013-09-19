@@ -19,7 +19,8 @@
       'text': 'require/text',
       'transparency': 'transparency/transparency.min',
       'underscore': 'underscore/underscore-min',
-      'config': 'js/config'
+      'config': 'js/config',
+      'moment': 'moment/moment.min'
     },
     shim: {
       'backbone': {

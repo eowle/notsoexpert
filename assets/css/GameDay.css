@@ -1,0 +1,44 @@
+.gameday-content
+{
+  text-align: center;
+}
+
+.week-line
+{
+  padding-left: 20px;
+}
+
+.tooltip-inner
+{
+  max-width: 1000px;
+}
+
+.member-row .member-box
+{
+  display: inline-block;
+  width: 50px;
+  text-align: center;
+  box-shadow: 1px 1px 2px #777;
+  margin: 0px 2px;
+}
+
+.member-row .member-box .first_name
+{
+  background-color: #EEE;
+  height: 24px;
+  font-size: 9px;
+  font-family: Verdana,Arial,Helvetica,sans-serif;
+  padding-top: 6px;
+  font-weight: bold;
+}
+
+.member-row .member-box .member-image
+{
+  height: 50px;
+}
+
+.member-row .member-box .member-image .member_avatar
+{
+  height: 50px;
+  width: 50px;
+}
