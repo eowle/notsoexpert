@@ -25,6 +25,22 @@ define(['backbone',
               text: function() {
                 return moment(this.game_time).format('dddd h:mm');
               }
+            },
+            'member_picks': {
+              'member_pick': {
+                'class': function(e) {
+                  if(this.member_pick !== 'NOT' && this.member_pick !== 'MADE') {
+                    return e.value + ' team-logo ' + this.member_pick;
+                  }
+                },
+                'text': function(){
+                  if(this.member_pick === 'NOT' || this.member_pick === 'MADE') {
+                    return this.member_pick;
+                  }
+
+                  return '';
+                }
+              }
             }
           };
 
