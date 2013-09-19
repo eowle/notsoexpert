@@ -1,0 +1,35 @@
+.pick-row {
+  margin: 4px 0;
+}
+
+.schedule-box,
+.member_picks,
+.member_pick
+{
+  display: inline-block;
+}
+
+.schedule-box
+{
+  width: 100px;
+  height: 50px;
+  font-size: 12px;
+  vertical-align: bottom;
+  padding-top: 8px;
+}
+
+.member_pick
+{
+  width: 50px;
+  height: 50px;
+  margin: 0 2px;
+  font-size: 12px;
+  text-align: center;
+  padding-top: 15px;
+}
+
+.member_pick,
+.schedule-box
+{
+  box-shadow: 1px 1px 2px #777;
+}
