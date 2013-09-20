@@ -31,7 +31,6 @@ define(['backbone',
                 'class': function(e) {
                   var classes = e.value;
 
-                  console.log(this);
                   if(this.member_pick.pick !== 'NOT' && this.member_pick.pick !== 'MADE') {
                     classes += ' team-logo ' + this.member_pick.pick;
                   }
