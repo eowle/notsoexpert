@@ -29,13 +29,26 @@ define(['backbone',
             'member_picks': {
               'member_pick': {
                 'class': function(e) {
-                  if(this.member_pick !== 'NOT' && this.member_pick !== 'MADE') {
-                    return e.value + ' team-logo ' + this.member_pick;
+                  var classes = e.value;
+
+                  console.log(this);
+                  if(this.member_pick.pick !== 'NOT' && this.member_pick.pick !== 'MADE') {
+                    classes += ' team-logo ' + this.member_pick.pick;
                   }
+
+                  if(this.member_pick.game_finished) {
+                    if(this.member_pick.win) {
+                      classes += ' win';
+                    }
+                    else {
+                      classes += ' loss';
+                    }
+                  }
+                  return classes;
                 },
                 'text': function(){
-                  if(this.member_pick === 'NOT' || this.member_pick === 'MADE') {
-                    return this.member_pick;
+                  if(this.member_pick.pick === 'NOT' || this.member_pick.pick === 'MADE') {
+                    return this.member_pick.pick;
                   }
 
                   return '';
@@ -50,16 +63,14 @@ define(['backbone',
         $.each(members, function(member_id, member_data) {
           if(member_data.picks && member_data.picks.hasOwnProperty(game.game_id)) {
             if(member_data.picks[game.game_id].pick === true) {
-              cur_pick = 'MADE'
-            }
-            else {
-              cur_pick = member_data.picks[game.game_id].pick;
+              member_data.picks[game.game_id].pick = "MADE";
             }
           }
           else {
-            cur_pick = "NOT";
+            member_data.picks[game.game_id] = {pick: "NOT", "game_finished": false, "win": false};
           }
 
+          cur_pick = member_data.picks[game.game_id];
           tmpObj.member_picks.push({'member_pick': cur_pick});
         });
 

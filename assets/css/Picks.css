@@ -33,3 +33,13 @@
 {
   box-shadow: 1px 1px 2px #777;
 }
+
+.member_pick.win {
+  box-shadow: 1px 1px 2px #007600;
+  border: 1px solid #007600;
+}
+
+.member_pick.loss {
+  box-shadow: 1px 1px 2px #840000;
+  border: 1px solid #840000;
+}
