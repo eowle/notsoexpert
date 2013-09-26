@@ -66,6 +66,10 @@ define(['backbone',
             }
           }
           else {
+            if(!member_data.picks) {
+              member_data.picks = [];
+            }
+
             member_data.picks[game.game_id] = {pick: "NOT", "game_finished": false, "win": false};
           }
 
