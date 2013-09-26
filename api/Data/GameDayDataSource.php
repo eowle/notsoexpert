@@ -25,20 +25,6 @@ class GameDayDataSource extends DataSource
     $return = array();
     $request_start = microtime(true);
 
-    /* Linear cURL Implementation
-    $data = array();
-    $data['results'] = $this->getResultsForWeek($week);
-    $data['members'] = $this->getMembers();
-    $data['picks'] = $this->getPicksForWeek($week);
-    $data['trash_talk'] = $this->getTrashTalkForWeek($week);
-    $data['schedule'] = $this->getScheduleForWeek($week);
-    $data['standings'] = $this->getStandings();
-    */
-
-    /* Multi-exec curl implementation
-    $data = $this->getDataFromCurlByWeek($week);
-    */
-
     //Direct Data Implementation
     $data = $this->getDataFromDataSources($week);
     $request_end = microtime(true);
@@ -46,8 +32,8 @@ class GameDayDataSource extends DataSource
     $assembly_start = microtime(true);
     $return['week'] = $week;
     $return['members'] = $this->mergeMemberPicksData($data['members'], $data['picks'], $data['results']);
-    $return['schedule'] = $data['schedule']->schedule;
-    $return['trash_talk'] = $data['trash_talk']->trash_talk;
+    $return['schedule'] = $data['schedule'];
+    $return['trash_talk'] = $data['trash_talk'];
     $return['standings'] = $data['standings'];
     $assembly_end = microtime(true);
 
