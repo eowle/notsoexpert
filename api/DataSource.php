@@ -21,4 +21,22 @@ class DataSource
   {
     $this->db = eDB::getInstance();
   }
+
+  /**
+   * Get an instance of the requested datasource
+   *
+   */
+  public static function getInstance()
+  {
+    static $instance = array();
+
+    $requested_class = get_called_class();
+
+    if($instance[$requested_class] === null)
+    {
+      $instance[$requested_class] = new $requested_class();
+    }
+
+    return $instance[$requested_class];
+  }
 }

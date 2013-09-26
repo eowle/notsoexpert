@@ -16,7 +16,6 @@ class GameDayDataSource extends DataSource
   /**
    * Get all the datas
    *
-   * TODO: Create StandingsAPI and insert it here
    *
    * @param int $week
    * @return array
@@ -36,14 +35,17 @@ class GameDayDataSource extends DataSource
     $data['standings'] = $this->getStandings();
     */
 
-    // Multi-exec curl implementation
+    /* Multi-exec curl implementation
     $data = $this->getDataFromCurlByWeek($week);
+    */
 
+    //Direct Data Implementation
+    $data = $this->getDataFromDataSources($week);
     $request_end = microtime(true);
 
     $assembly_start = microtime(true);
     $return['week'] = $week;
-    $return['members'] = $this->mergeMemberPicksData($data['members'], $data['picks']->picks, $data['results']->results);
+    $return['members'] = $this->mergeMemberPicksData($data['members'], $data['picks'], $data['results']);
     $return['schedule'] = $data['schedule']->schedule;
     $return['trash_talk'] = $data['trash_talk']->trash_talk;
     $return['standings'] = $data['standings'];
@@ -52,6 +54,26 @@ class GameDayDataSource extends DataSource
     $return['request_time'] = ($request_end - $request_start) * 1000;
     $return['assembly_time'] = ($assembly_end - $assembly_start) * 1000;
     return $return;
+  }
+
+  /**
+   * Get data from the datasources directly, instead of through the API Endpoints
+   *
+   * @param int $week
+   * @return array
+   */
+  protected function getDataFromDataSources($week)
+  {
+    $data = array();
+
+    $data['results'] = ResultsDataSource::getInstance()->getResultsForWeek($week);
+    $data['members'] = MembersDataSource::getInstance()->getMembers();
+    $data['schedule'] = ScheduleDataSource::getInstance()->getScheduleForWeek($week);
+    $data['trash_talk'] = TrashTalkDataSource::getInstance()->getTrashTalkForWeek($week);
+    $data['picks'] = PicksDataSource::getInstance()->getPicksByWeek($week);
+    $data['standings'] = StandingsDataSource::getInstance()->getStandings();
+
+    return $data;
   }
 
   /**

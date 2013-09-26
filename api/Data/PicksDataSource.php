@@ -63,7 +63,7 @@ class PicksDataSource extends DataSource
       while($this->db->fetch())
       {
         $result = $this->db->createObjectFromResult();
-        if(strtotime($result->game_time) > time() && LoginHelper::isLoggedInUser($user_id) === false)
+        if(strtotime($result->game_time) > time() && LoginHelper::isLoggedInUser($result->user_id) === false)
         {
 
           $result->pick = true;
